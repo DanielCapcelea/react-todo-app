@@ -1,11 +1,11 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import styles from '../styles/modules/app.module.scss';
 import TodoItem from './TodoItem';
 
 const container = {
-    hidden: { opacity: 1 },
+    hidden: { opacity: 0.1 },
     visible: {
         opacity: 1,
         scale: 1,
