@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdOutlineClose } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { toast } from 'react-hot-toast';
 import Button from './Button';
-import { addTodo } from '../redux/todoSlice';
+import { addTodo, updateTodo } from '../redux/todoSlice';
 import styles from '../styles/modules/modal.module.scss';
 
-function TodoModal({ modalOpen, setModalOpen }) {
+function TodoModal({ type, todo, modalOpen, setModalOpen }) {
     const [title, setTitle] = useState('');
     const [status, setStatus] = useState('incomplete');
-
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (type === 'update' && todo) {
+            setTitle(todo.title);
+            setStatus(todo.status);
+        } else {
+            setTitle('');
+            setStatus('incomplete');
+        }
+    }, [type, todo, modalOpen]);
 
     const onClose = () => {
         setModalOpen(false);
@@ -20,16 +29,36 @@ function TodoModal({ modalOpen, setModalOpen }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (title === '') {
+            toast.error('Please enter a title.');
+            return;
+        }
+
         if (title && status) {
-            dispatch(
-                addTodo({
-                    id: uuid(),
-                    title,
-                    status,
-                    time: new Date().toLocaleDateString(),
-                })
-            );
-            toast.success('Task Added Successfully');
+            if (type === 'add') {
+                dispatch(
+                    addTodo({
+                        id: uuid(),
+                        title,
+                        status,
+                        time: new Date().toLocaleDateString(),
+                    })
+                );
+                toast.success('Task Added Successfully');
+            }
+            if (type === 'update') {
+                if (todo.title !== title || todo.status !== status) {
+                    dispatch(
+                        updateTodo({
+                            ...todo,
+                            title,
+                            status,
+                        })
+                    );
+                } else {
+                    toast.error('No Changes Made');
+                }
+            }
             setModalOpen(false);
         } else {
             toast.error('Title should not be empty');
@@ -53,7 +82,9 @@ function TodoModal({ modalOpen, setModalOpen }) {
                         className={styles.form}
                         onSubmit={(event) => handleSubmit(event)}
                     >
-                        <h1 className={styles.formTitle}>Add Task</h1>
+                        <h1 className={styles.formTitle}>
+                            {type === 'update' ? 'Update' : 'Add'} Task
+                        </h1>
                         <label htmlFor="title">
                             Title
                             <input
@@ -65,23 +96,29 @@ function TodoModal({ modalOpen, setModalOpen }) {
                                 }
                             />
                         </label>
-                        <label htmlFor="status">
-                            Status
-                            <select
-                                name="status"
-                                id="status"
-                                value={status}
-                                onChange={(event) =>
-                                    setStatus(event.target.value)
-                                }
-                            >
-                                <option value="incomplete">Incomplete</option>
-                                <option value="complete">Complete</option>
-                            </select>
-                        </label>
+                        {type === 'update' ? (
+                            <label htmlFor="status">
+                                Status
+                                <select
+                                    name="status"
+                                    id="status"
+                                    value={status}
+                                    onChange={(event) =>
+                                        setStatus(event.target.value)
+                                    }
+                                >
+                                    <option value="incomplete">
+                                        Incomplete
+                                    </option>
+                                    <option value="complete">Complete</option>
+                                </select>
+                            </label>
+                        ) : (
+                            ''
+                        )}
                         <div className={styles.buttonContainer}>
                             <Button type="submit" variant="primary">
-                                Add Task
+                                {type === 'update' ? 'Update' : 'Add'} Task
                             </Button>
                             <Button
                                 variant="secondary"
