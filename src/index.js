@@ -8,8 +8,8 @@ import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
