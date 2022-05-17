@@ -10,14 +10,6 @@ import styles from '../styles/modules/todoItem.module.scss';
 import TodoModal from './TodoModal';
 import CheckButton from './CheckButton';
 
-const child = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-        y: 0,
-        opacity: 1,
-    },
-};
-
 function TodoItem({ todo }) {
     const dispatch = useDispatch();
     const [checked, setChecked] = useState(false);
@@ -54,7 +46,20 @@ function TodoItem({ todo }) {
 
     return (
         <>
-            <motion.div className={styles.item} variants={child}>
+            <motion.div
+                className={styles.item}
+                initial={{
+                    x: '150vw',
+                    transition: { type: 'spring', duration: 2 },
+                }}
+                animate={{ x: 0, transition: { type: 'spring', duration: 2 } }}
+                exit={{
+                    x: '-60vw',
+                    scale: [1, 0],
+                    transition: { duration: 0.5 },
+                    backgroundColor: 'rgba(255,0,0,1)',
+                }}
+            >
                 <div className={styles.todoDetails}>
                     <CheckButton
                         checked={checked}
