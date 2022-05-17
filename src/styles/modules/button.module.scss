@@ -20,15 +20,42 @@
 
     width: 150px;
     cursor: pointer;
+    appearance: none;
   }
 }
 
+.custom__select {
+  position: relative;
+}
+
+.arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 3rem;
+  padding: 3px;
+  pointer-events: none;
+
+  svg {
+    color: var(--black-1);
+  }
+}
+
+
 .button--primary {
-  background-color: var(--primaryPurple);
+  background-color: var(--primary);
   color: var(--white);
+
+  &:hover {
+    background-color: var(--primaryHover);
+  }
 }
 
 .button--secondary {
   background-color: var(--bg-3);
   color: var(--black-1);
+
+  &:hover {
+    background-color: var(--secondaryHover);
+  }
 }
